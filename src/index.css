@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+body {
+  @apply bg-gray-100 text-gray-900;
+}
+.btn-primary {
+  @apply bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700 transition;
+}
+
+.btn-secondary {
+  @apply bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 transition;
+}
+
+.btn-danger {
+  @apply bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition;
+}
+
+.input {
+  @apply w-full p-2 border rounded focus:ring-2 focus:ring-orange-400 outline-none;
+}
+button,
+a {
+  @apply cursor-pointer;
+}
+
+/* Disable click look when disabled */
+button:disabled {
+  @apply cursor-not-allowed opacity-50;
+}
+
+/* Smooth tap on mobile */
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-primary {
+  @apply bg-orange-600 text-white px-4 py-2 rounded
+         hover:bg-orange-700 active:scale-95 transition;
+}
+
+.btn-secondary {
+  @apply bg-gray-300 px-4 py-2 rounded
+         hover:bg-gray-400 active:scale-95 transition;
+}
+
+.btn-danger {
+  @apply bg-red-500 text-white px-3 py-1 rounded
+         hover:bg-red-600 active:scale-95 transition;
+}
