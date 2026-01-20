@@ -15,7 +15,8 @@ export default function Products() {
     const { data, error } = await supabase
       .from("products")
       .select("*")
-      .order("created_at", { ascending: true })
+      .order("created_at", { ascending: false })
+
     if (error) {
       toast.error(error.message)
     } else {
@@ -28,13 +29,11 @@ export default function Products() {
     if (!confirm("Delete product?")) return
     const { error } = await supabase.from("products").delete().eq("id", id)
     if (error) return toast.error(error.message)
-    toast.success("Deleted")
+    toast.success("Product deleted")
     loadProducts()
   }
 
-  useEffect(() => {
-    loadProducts()
-  }, [])
+  useEffect(() => { loadProducts() }, [])
 
   if (loading) return <Loader />
 
@@ -42,14 +41,17 @@ export default function Products() {
     <div>
       <div className="flex justify-between mb-4">
         <h1 className="text-2xl font-bold">Products</h1>
-        <button onClick={() => setModalOpen(true)} className="btn-primary">
+        <button
+          onClick={() => { setEdit(null); setModalOpen(true) }}
+          className="btn-primary"
+        >
           + Add Product
         </button>
       </div>
 
       <div className="grid md:grid-cols-3 gap-4">
         {products.map(p => (
-          <div key={p.id} className="bg-white p-4 rounded shadow">
+          <div key={p.id} className="bg-white p-4 rounded-lg shadow">
             <img src={p.image_url} className="h-40 w-full object-cover rounded" />
             <h2 className="font-bold mt-2">{p.title}</h2>
             <p className="text-sm text-gray-600">{p.price} DA</p>

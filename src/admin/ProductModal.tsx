@@ -3,12 +3,18 @@ import toast from "react-hot-toast"
 import { supabase } from "../lib/supabase"
 import { uploadToCloudinary } from "../lib/cloudinary"
 
-export default function ProductModal({ product, close, reload }: any) {
+interface ProductModalProps {
+  product?: any
+  close: () => void
+  reload: () => void
+}
+
+export default function ProductModal({ product, close, reload }: ProductModalProps) {
   const [loading, setLoading] = useState(false)
   const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState(product?.image_url || "")
   const [form, setForm] = useState({
-    title: product?.title || "",
+    name: product?.name || "",
     description: product?.description || "",
     price: product?.price || "",
     type: product?.type || "",
@@ -20,28 +26,30 @@ export default function ProductModal({ product, close, reload }: any) {
   }, [file])
 
   async function save() {
+    if (!form.name || (!form.image_url && !file)) {
+      return toast.error("Title and image are required")
+    }
+
     try {
       setLoading(true)
 
       let imageUrl = form.image_url
       if (file) imageUrl = await uploadToCloudinary(file)
 
-      if (!imageUrl || !form.title) {
-        toast.error("Title and image required")
-        return
-      }
-
       const payload = { ...form, image_url: imageUrl }
 
-      const query = product
-        ? supabase.from("products").update(payload).eq("id", product.id)
-        : supabase.from("products").insert(payload)
+      let query
+      if (product) {
+        query = supabase.from("products").update(payload).eq("id", product.id)
+      } else {
+        query = supabase.from("products").insert(payload)
+      }
 
       const { error } = await query
       if (error) throw error
 
       toast.success(product ? "Product updated" : "Product added")
-      reload() // reload products in parent
+      reload()
       close()
     } catch (err: any) {
       toast.error(err.message)
@@ -52,36 +60,41 @@ export default function ProductModal({ product, close, reload }: any) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded w-[95%] max-w-md space-y-3">
+      <div className="bg-white p-6 rounded-lg w-[95%] max-w-md space-y-3">
         <h2 className="text-xl font-bold">{product ? "Edit" : "Add"} Product</h2>
 
         <input
+          type="text"
           className="input"
           placeholder="Title"
-          value={form.title}
-          onChange={e => setForm({ ...form, title: e.target.value })}
+          value={form.name}
+          onChange={e => setForm({ ...form, name: e.target.value })}
         />
+
         <textarea
           className="input"
           placeholder="Description"
           value={form.description}
           onChange={e => setForm({ ...form, description: e.target.value })}
         />
+
         <input
-          className="input"
           type="number"
+          className="input"
           placeholder="Price"
           value={form.price}
           onChange={e => setForm({ ...form, price: e.target.value })}
         />
+
         <input
+          type="text"
           className="input"
           placeholder="Type"
           value={form.type}
           onChange={e => setForm({ ...form, type: e.target.value })}
         />
 
-        <label className="block">
+        <label className="block mt-2">
           <span className="text-sm text-gray-600">Product Image</span>
           <input
             type="file"
@@ -92,7 +105,7 @@ export default function ProductModal({ product, close, reload }: any) {
         </label>
 
         {preview && (
-          <img src={preview} className="h-40 w-full object-cover rounded" />
+          <img src={preview} className="h-40 w-full object-cover rounded mt-2" />
         )}
 
         <div className="flex justify-end gap-2 mt-4">
