@@ -39,28 +39,30 @@ export default function Products() {
 
   return (
     <div>
-      <div className="flex justify-between mb-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <h1 className="text-2xl font-bold">Products</h1>
         <button
           onClick={() => { setEdit(null); setModalOpen(true) }}
-          className="btn-primary"
+          className="btn-primary w-full sm:w-auto"
         >
           + Add Product
         </button>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {products.map(p => (
-          <div key={p.id} className="bg-white p-4 rounded-lg shadow">
-            <img src={p.image_url} className="h-40 w-full object-cover rounded" />
-            <h2 className="font-bold mt-2">{p.title}</h2>
-            <p className="text-sm text-gray-600">{p.price} DA</p>
+          <div key={p.id} className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col transition-all hover:shadow-md">
+            <img src={p.image_url} className="h-48 w-full object-cover rounded-lg" />
+            <div className="flex-1">
+              <h2 className="font-bold mt-4 text-lg text-gray-800">{p.title}</h2>
+              <p className="text-orange-600 font-bold">{p.price} DA</p>
+            </div>
 
-            <div className="flex gap-2 mt-3">
-              <button onClick={() => { setEdit(p); setModalOpen(true) }} className="btn-secondary">
+            <div className="flex gap-2 mt-4">
+              <button onClick={() => { setEdit(p); setModalOpen(true) }} className="btn-secondary flex-1">
                 Edit
               </button>
-              <button onClick={() => del(p.id)} className="btn-danger">
+              <button onClick={() => del(p.id)} className="btn-danger flex-1">
                 Delete
               </button>
             </div>
