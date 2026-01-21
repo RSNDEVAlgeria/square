@@ -10,7 +10,7 @@ export default function ProtectedRoute({ children }: { children: JSX.Element }) 
 
   if (!user) return <Navigate to="/admin/login" replace /> // not logged in
 
-  if (user.user_metadata?.role !== "admin") {
+  if (user.app_metadata?.role !== "admin") {
     // user is logged in but not an admin
     return <Navigate to="/admin/login" replace />
   }

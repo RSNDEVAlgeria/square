@@ -18,7 +18,7 @@ export default function Login() {
 
     if (error) return toast.error(error.message)
 
-    if (data.user?.user_metadata?.role !== "admin") {
+    if (data.user?.app_metadata?.role !== "admin") {
       await supabase.auth.signOut()
       return toast.error("Not authorized as admin")
     }
