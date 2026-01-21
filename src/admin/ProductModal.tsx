@@ -15,7 +15,6 @@ export default function ProductModal({ product, close, reload }: ProductModalPro
   const [preview, setPreview] = useState(product?.image_url || "")
   const [form, setForm] = useState({
     name: product?.name || "",
-    description: product?.description || "",
     price: product?.price || "",
     type: product?.type || "",
     image_url: product?.image_url || "",
@@ -70,15 +69,7 @@ export default function ProductModal({ product, close, reload }: ProductModalPro
           value={form.name}
           onChange={e => setForm({ ...form, name: e.target.value })}
         />
-
-        <textarea
-          className="input"
-          placeholder="Description"
-          value={form.description}
-          onChange={e => setForm({ ...form, description: e.target.value })}
-        />
-
-        <input
+         <input
           type="number"
           className="input"
           placeholder="Price"

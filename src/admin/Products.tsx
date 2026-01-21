@@ -14,7 +14,7 @@ export default function Products() {
     setLoading(true)
     const { data, error } = await supabase
       .from("products")
-      .select("*")
+      .select("id,name,price,image_url,type")
       .order("created_at", { ascending: false })
 
     if (error) {

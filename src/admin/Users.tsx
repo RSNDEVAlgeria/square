@@ -14,8 +14,7 @@ export default function Users() {
     try {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, email, name, balance, created_at")
-        .order('created_at', { ascending: true });
+        .select("email, name, balance")
 
       if (error) throw error
       setUsers(data || [])
