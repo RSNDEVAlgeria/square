@@ -1,25 +1,34 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import { supabase } from "../lib/supabase"
 
 interface UserModalProps {
-  user: any // Now expected to have id, name, email, balance
+  user: {
+    id: string
+    name: string
+    email: string
+    balance: number
+  }
   close: () => void
   reload: () => void
 }
 
 export default function UserModal({ user, close, reload }: UserModalProps) {
   const [loading, setLoading] = useState(false)
-  const [balance, setBalance] = useState(user?.balance || 0)
+  const [balance, setBalance] = useState<number>(user.balance ?? 0)
+
+  // Keep modal state in sync when user changes
+  useEffect(() => {
+    setBalance(user.balance ?? 0)
+  }, [user])
 
   async function save() {
     try {
       setLoading(true)
 
-      // Update only the balance in the users table
       const { error } = await supabase
         .from("profiles")
-        .update({ balance: Number(balance) })
+        .update({ balance })
         .eq("id", user.id)
 
       if (error) throw error
@@ -28,7 +37,7 @@ export default function UserModal({ user, close, reload }: UserModalProps) {
       reload()
       close()
     } catch (err: any) {
-      toast.error(err.message)
+      toast.error(err.message || "Failed to update balance")
     } finally {
       setLoading(false)
     }
@@ -40,41 +49,55 @@ export default function UserModal({ user, close, reload }: UserModalProps) {
         <h2 className="text-xl font-bold">Edit User Balance</h2>
 
         <div>
-          <label className="text-xs font-semibold text-gray-500 uppercase">User Name</label>
+          <label className="text-xs font-semibold text-gray-500 uppercase">
+            User Name
+          </label>
           <input
             type="text"
             className="input bg-gray-100 cursor-not-allowed opacity-70"
-            value={user?.name}
+            value={user.name || ""}
             disabled
           />
         </div>
 
         <div>
-          <label className="text-xs font-semibold text-gray-500 uppercase">Email Address</label>
+          <label className="text-xs font-semibold text-gray-500 uppercase">
+            Email Address
+          </label>
           <input
             type="text"
             className="input bg-gray-100 cursor-not-allowed opacity-70"
-            value={user?.email}
+            value={user.email || ""}
             disabled
           />
         </div>
 
         <div>
-          <label className="text-xs font-semibold text-gray-500 uppercase">Current Balance</label>
+          <label className="text-xs font-semibold text-gray-500 uppercase">
+            Current Balance
+          </label>
           <input
             type="number"
             className="input border-blue-500 focus:ring-2"
             placeholder="0.00"
             value={balance}
-            onChange={e => setBalance(e.target.value)}
+            onChange={e => setBalance(Number(e.target.value))}
           />
         </div>
 
         <div className="flex justify-end gap-2 mt-6">
-          <button onClick={close} className="btn-secondary">
+          <button
+            onClick={close}
+            className="btn-secondary"
+            disabled={loading}
+          >
             Cancel
           </button>
-          <button onClick={save} disabled={loading} className="btn-primary">
+          <button
+            onClick={save}
+            disabled={loading}
+            className="btn-primary"
+          >
             {loading ? "Updating..." : "Update Balance"}
           </button>
         </div>
