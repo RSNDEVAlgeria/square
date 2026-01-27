@@ -76,15 +76,11 @@ export default function ProductModal({ product, close, reload }: ProductModalPro
           value={form.price}
           onChange={e => setForm({ ...form, price: e.target.value })}
         />
-
-        <input
-          type="text"
-          className="input"
-          placeholder="Type"
-          value={form.type}
-          onChange={e => setForm({ ...form, type: e.target.value })}
-        />
-
+        <select className="input" value={form.type} onChange={e => setForm({ ...form, type: e.target.value })}>
+            <option value="" disabled>Select Type</option>
+            <option value="Option1">Food</option>
+            <option value="Option2">Drink</option>
+        </select>
         <label className="block mt-2">
           <span className="text-sm text-gray-600">Product Image</span>
           <input
