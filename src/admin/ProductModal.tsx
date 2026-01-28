@@ -78,9 +78,14 @@ export default function ProductModal({ product, close, reload }: ProductModalPro
         />
         <select className="input" value={form.type} onChange={e => setForm({ ...form, type: e.target.value })}>
             <option value="" disabled>Select Type</option>
+<<<<<<< HEAD
             <option value="Option1">Salty food</option>
             <option value="Option3">Sweet food</option>
             <option value="Option2">Drink</option>
+=======
+            <option value="Option1">Food</option>
+            <option value="Option2">Drinks</option>
+>>>>>>> 0f02e976a29079cb508b367650c51e07aa9e0852
         </select>
         <label className="block mt-2">
           <span className="text-sm text-gray-600">Product Image</span>
